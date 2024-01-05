@@ -1,19 +1,19 @@
 require('dotenv').config();
-
 const express = require('express');
-const app = express()
+const app = express();
 const mongoose = require('mongoose');
+const routes = require('./routes')
+const path = require('path')
+const {middleWaresGlobal} = require('./src/middlewares/middlewares');
+const e = require('express');
 
 
-mongoose.connect(process.env.connectionString)
+mongoose.connect(process.env.connectionStringMODELO)
 .then(()=>{
     console.log("conectei a base de dados")
     app.emit('pronto')
-});
+}).catch(e =>{console.log(e)});
 
-const routes = require('./routes')
-const path = require('path')
-const {middleWaresGlobal} = require('./src/middlewares/middlewares')
 
 
 app.use(express.urlencoded({extended:true}))
