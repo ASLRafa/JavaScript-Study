@@ -10,10 +10,7 @@
     // HomeModel.find({usuario:'raquelzinha'}).then(dados => console.log(dados))
 
 exports.paginaInicial = (req,res) =>{
-    console.log(req.flash('error'));
-    console.log(req.flash('info'));
-    console.log(req.flash('warning'));
-    console.log(req.flash('success'));
+    console.log(req.session.usuario);
 
     res.render('index')
 

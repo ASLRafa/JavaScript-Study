@@ -1,3 +1,4 @@
+// Importando as dependências necessárias
 require('dotenv').config();
 const express = require('express');
 const app = express();
@@ -5,9 +6,11 @@ const mongoose = require('mongoose');
 const routes = require('./routes')
 const path = require('path')
 const {middleWaresGlobal} = require('./src/middlewares/middlewares');
-const e = require('express');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const flash = require('connect-flash');
 
-
+// Conectando ao banco de dados MongoDB
 mongoose.connect(process.env.connectionStringMODELO)
 .then(()=>{
     console.log("conectei a base de dados")
@@ -15,16 +18,13 @@ mongoose.connect(process.env.connectionStringMODELO)
     
 }).catch(e =>{console.log(e)});
 
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const flash = require('connect-flash');
-
-
+// Configurando o uso do middleware para receber dados do formulário
 app.use(express.urlencoded({extended:true}))
 
-
+// Configurando o uso de arquivos estáticos na pasta 'public'
 app.use(express.static('./public'))
 
+// Configurando as opções da sessão
 const sessionOptions = session({
     secret:'asdasdasdasd',
     store: MongoStore.create({ mongoUrl: process.env.connectionStringMODELO }),
@@ -36,13 +36,21 @@ const sessionOptions = session({
     }    
 });
 app.use(sessionOptions);
+
+// Configurando o uso do flash para exibir mensagens temporárias
 app.use(flash());
 
+// Configurando o diretório das views e o template engine EJS
 app.set('views',path.resolve(__dirname,'src','views'))
 app.set('view engine','ejs')
+
+// Aplicando os middlewares globais
 app.use(middleWaresGlobal)
+
+// Configurando as rotas
 app.use(routes)
 
+// Iniciando o servidor após a conexão com o banco de dados
 app.on('pronto',()=> {
     app.listen(3000, ()=>{
         console.log('Acessar http://localhost:3000')
