@@ -25,7 +25,7 @@ app.use(helmet());
 
 // Configurando o uso do middleware para receber dados do formulário
 app.use(express.urlencoded({extended:true}))
-
+app.use(express.json());
 // Configurando o uso de arquivos estáticos na pasta 'public'
 app.use(express.static('./public'))
 
