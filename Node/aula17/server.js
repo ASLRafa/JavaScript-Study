@@ -5,12 +5,12 @@ const app = express();
 const mongoose = require('mongoose');
 const routes = require('./routes')
 const path = require('path')
-const {middleWaresGlobal} = require('./src/middlewares/middlewares');
+const {middleWaresGlobal,checkCsrfError,csrfMiddleware} = require('./src/middlewares/middlewares');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
-const helmet = require('helmet')
-const csrf = require('csurf')
+const helmet = require('helmet');
+const csrf = require('csurf');
 
 // Conectando ao banco de dados MongoDB
 mongoose.connect(process.env.connectionStringMODELO)
@@ -52,7 +52,9 @@ app.set('view engine','ejs')
 
 app.use(csrf());
 // Aplicando os middlewares globais
-app.use(middleWaresGlobal)
+app.use(middleWaresGlobal);
+app.use(checkCsrfError);
+app.use(csrfMiddleware);
 
 // Configurando as rotas
 app.use(routes)
